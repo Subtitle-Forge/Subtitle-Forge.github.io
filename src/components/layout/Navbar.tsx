@@ -1,9 +1,9 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
-  Subtitles,
   Sun,
   Moon,
   Menu,
@@ -20,6 +20,8 @@ const navItems = [
   { href: '/convert', label: 'Convert Formats' },
 ];
 
+const logoUrl = 'https://res.cloudinary.com/dkj22lm1g/image/upload/v1770949907/SubtitleForge_tyfucj.webp';
+
 export default function Navbar() {
   const pathname = usePathname();
   const { theme, toggleTheme } = useTheme();
@@ -35,7 +37,14 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/80 backdrop-blur-md dark:border-slate-700 dark:bg-slate-900/80">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2">
-          <Subtitles className="h-7 w-7 text-blue-600" />
+          <Image
+            src={logoUrl}
+            alt="SubtitleForge Logo"
+            width={36}
+            height={36}
+            className="h-9 w-9 rounded-lg"
+            priority
+          />
           <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             SubtitleForge
           </span>

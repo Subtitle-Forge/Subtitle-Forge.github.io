@@ -1,3 +1,29 @@
+# SubtitleForge
+
+A modern, mobile-responsive web application built with Next.js 14+, Tailwind CSS, and TypeScript for generating SRT subtitle files and embedding subtitles into videos using FFmpeg.wasm.
+
+**Live Site:** [https://subtitle-forge.github.io](https://subtitle-forge.github.io)
+
+## Getting Started
+
+```bash
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev
+
+# Build for production (static export)
+npm run build
+
+# The static output is generated in the `out/` directory
+```
+
+## Deployment
+
+This project is configured for automatic deployment to GitHub Pages via GitHub Actions. Push to the `main` branch to trigger a deployment.
+
+---
 
 ## **Comprehensive Prompt for SubtitleForge - A Next.js SRT File Generator & Video Embedding Application**
 

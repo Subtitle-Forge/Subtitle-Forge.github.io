@@ -87,12 +87,13 @@ export default function CreatePage() {
   }, []);
 
   // Initialize history with the loaded entries
+  const historyInitializedRef = useRef(false);
   useEffect(() => {
-    if (historyRef.current.length === 0) {
+    if (!historyInitializedRef.current) {
+      historyInitializedRef.current = true;
       pushHistory(entries);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [entries, pushHistory]);
 
   const setEntriesWithHistory = useCallback(
     (updater: SubtitleEntry[] | ((prev: SubtitleEntry[]) => SubtitleEntry[])) => {
@@ -265,7 +266,11 @@ export default function CreatePage() {
 
   const handleShiftTimings = useCallback(() => {
     const ms = Math.round(parseFloat(shiftSeconds) * 1000);
-    if (isNaN(ms) || ms === 0) return;
+    if (isNaN(ms)) return;
+    if (ms === 0) {
+      setShowShiftDialog(false);
+      return;
+    }
     setEntriesWithHistory((prev) =>
       prev.map((entry) => {
         const newStart = Math.max(0, timeToMs(entry.startTime) + ms);

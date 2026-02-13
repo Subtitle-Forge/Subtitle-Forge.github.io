@@ -72,7 +72,7 @@ export default function SubtitleEntryCard({
     } catch { /* invalid time */ }
   }
 
-  // Suppress unused variable lint — nextStartTime is received for API completeness
+  // nextStartTime is available for potential forward-overlap validation
   void nextStartTime;
 
   return (

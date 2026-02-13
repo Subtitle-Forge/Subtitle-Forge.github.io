@@ -1,0 +1,21 @@
+{
+  "name": "SubtitleForge",
+  "short_name": "SubtitleForge",
+  "description": "Create, edit, and embed SRT subtitle files with an intuitive editor. Convert between formats and burn subtitles into videos directly in your browser.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "https://res.cloudinary.com/dkj22lm1g/image/upload/v1770949907/SubtitleForge_tyfucj.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["utilities", "productivity"],
+  "lang": "en-US",
+  "dir": "ltr"
+}

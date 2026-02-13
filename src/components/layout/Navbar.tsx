@@ -12,6 +12,7 @@ import {
 import { useTheme } from './ThemeProvider';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import KeyboardShortcuts from './KeyboardShortcuts';
 
 const navItems = [
   { href: '/create', label: 'Create Subtitles' },
@@ -59,6 +60,7 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center gap-2">
+          <KeyboardShortcuts />
           <button
             onClick={toggleTheme}
             className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors"

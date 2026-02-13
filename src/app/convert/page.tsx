@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { SubtitleEntry, ExportFormat } from '@/types/subtitle.types';
-import { parseSRT, entriesToSRT } from '@/lib/subtitle-parser';
+import { parseSRT } from '@/lib/subtitle-parser';
 import { convertEntries, downloadFile } from '@/lib/file-converter';
 import {
   FileUp,
@@ -28,18 +28,14 @@ export default function ConvertPage() {
   const [outputText, setOutputText] = useState('');
   const [fileName, setFileName] = useState('');
   const [copied, setCopied] = useState(false);
+  const [isDragOver, setIsDragOver] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileUpload = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-
+  const processFile = useCallback(
+    (file: File) => {
       setFileName(file.name);
-
-      // Detect input format from extension
       const ext = file.name.split('.').pop()?.toLowerCase() || '';
       setInputFormat(ext);
-
       file.text().then((text) => {
         setInputText(text);
         const parsed = parseSRT(text);
@@ -51,6 +47,35 @@ export default function ConvertPage() {
     },
     [outputFormat]
   );
+
+  const handleFileUpload = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      processFile(file);
+    },
+    [processFile]
+  );
+
+  const handleDropFile = useCallback(
+    (e: React.DragEvent<HTMLLabelElement>) => {
+      e.preventDefault();
+      setIsDragOver(false);
+      const file = e.dataTransfer.files?.[0];
+      if (!file) return;
+      processFile(file);
+    },
+    [processFile]
+  );
+
+  const handleDragOver = useCallback((e: React.DragEvent<HTMLLabelElement>) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  }, []);
+
+  const handleDragLeave = useCallback(() => {
+    setIsDragOver(false);
+  }, []);
 
   const handleConvert = useCallback(() => {
     if (entries.length === 0) return;
@@ -107,15 +132,27 @@ export default function ConvertPage() {
           <h3 className="mb-4 text-sm font-semibold text-slate-700 dark:text-slate-300">
             Upload Subtitle File
           </h3>
-          <label className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 p-8 transition-colors hover:border-blue-400 dark:border-slate-600 dark:hover:border-blue-500">
-            <FileUp className="mb-3 h-10 w-10 text-slate-400" />
+          <label
+            onDrop={handleDropFile}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            className={`flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-8 transition-colors ${
+              isDragOver
+                ? 'border-blue-500 bg-blue-50 dark:border-blue-400 dark:bg-blue-900/20'
+                : 'border-slate-300 hover:border-blue-400 dark:border-slate-600 dark:hover:border-blue-500'
+            }`}
+          >
+            <FileUp className={`mb-3 h-10 w-10 ${isDragOver ? 'text-blue-500' : 'text-slate-400'}`} />
             <p className="text-sm font-medium text-slate-600 dark:text-slate-300">
-              {fileName || 'Click to upload or drop a subtitle file'}
+              {isDragOver
+                ? 'Drop file here...'
+                : fileName || 'Click to upload or drop a subtitle file'}
             </p>
             <p className="mt-1 text-xs text-slate-400">
               Supports SRT, VTT, TXT, ASS formats
             </p>
             <input
+              ref={fileInputRef}
               type="file"
               accept=".srt,.vtt,.txt,.ass"
               className="hidden"

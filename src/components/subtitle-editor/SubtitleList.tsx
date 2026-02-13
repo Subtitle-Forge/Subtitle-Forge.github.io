@@ -157,11 +157,6 @@ export default function SubtitleList({
               isDragging={dragIndex === index}
               isDragOver={dragOverIndex === index && dragIndex !== index}
               prevEndTime={index > 0 ? entries[index - 1].endTime : undefined}
-              nextStartTime={
-                index < entries.length - 1
-                  ? entries[index + 1].startTime
-                  : undefined
-              }
               selected={selectedIds?.has(entry.id)}
               onToggleSelect={
                 onToggleSelect ? () => onToggleSelect(entry.id) : undefined

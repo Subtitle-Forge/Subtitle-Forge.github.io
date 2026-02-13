@@ -21,7 +21,6 @@ interface SubtitleEntryCardProps {
   isDragOver?: boolean;
   // Validation props
   prevEndTime?: string;
-  nextStartTime?: string;
   // Selection props
   selected?: boolean;
   onToggleSelect?: () => void;
@@ -42,7 +41,6 @@ export default function SubtitleEntryCard({
   isDragging,
   isDragOver,
   prevEndTime,
-  nextStartTime,
   selected,
   onToggleSelect,
   textareaRef,
@@ -71,9 +69,6 @@ export default function SubtitleEntryCard({
       overlapWarning = timeToMs(entry.startTime) < timeToMs(prevEndTime);
     } catch { /* invalid time */ }
   }
-
-  // nextStartTime is available for potential forward-overlap validation
-  void nextStartTime;
 
   return (
     <div

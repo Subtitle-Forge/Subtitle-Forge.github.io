@@ -93,7 +93,8 @@ export default function CreatePage() {
       historyInitializedRef.current = true;
       pushHistory(entries);
     }
-  }, [entries, pushHistory]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pushHistory]);
 
   const setEntriesWithHistory = useCallback(
     (updater: SubtitleEntry[] | ((prev: SubtitleEntry[]) => SubtitleEntry[])) => {

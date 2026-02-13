@@ -9,7 +9,6 @@ interface StyleCustomizerProps {
 }
 
 const fontFamilies = ['Arial', 'Helvetica', 'Roboto', 'Times New Roman', 'Courier New', 'Verdana'];
-const fontSizes = [16, 20, 24, 28, 32, 36, 40, 48];
 
 export default function StyleCustomizer({ options, onChange }: StyleCustomizerProps) {
   const update = (partial: Partial<VideoProcessingOptions>) =>

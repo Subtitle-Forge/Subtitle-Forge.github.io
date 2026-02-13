@@ -1,31 +1,51 @@
 import { SubtitleEntry } from '@/types/subtitle.types';
 
 /**
- * Parse SRT format string into SubtitleEntry array
+ * Parse SRT or VTT format string into SubtitleEntry array
  */
 export function parseSRT(content: string): SubtitleEntry[] {
   const entries: SubtitleEntry[] = [];
-  const blocks = content.trim().split(/\n\s*\n/);
+
+  // Strip WEBVTT header and any metadata lines
+  let cleaned = content.trim();
+  if (cleaned.startsWith('WEBVTT')) {
+    // Remove the WEBVTT header line and any following metadata lines before the first cue
+    cleaned = cleaned.replace(/^WEBVTT[^\n]*\n(?:[^\n]+:[^\n]*\n)*\n?/, '');
+  }
+
+  const blocks = cleaned.trim().split(/\n\s*\n/);
 
   for (const block of blocks) {
     const lines = block.trim().split('\n');
-    if (lines.length < 3) continue;
+    if (lines.length < 2) continue;
 
-    const sequenceNumber = parseInt(lines[0], 10);
-    if (isNaN(sequenceNumber)) continue;
+    let timeLineIndex = 0;
+    let sequenceNumber = entries.length + 1;
 
-    const timeMatch = lines[1].match(
-      /(\d{2}:\d{2}:\d{2},\d{3})\s*-->\s*(\d{2}:\d{2}:\d{2},\d{3})/
+    // Check if first line is a sequence number or a time line
+    if (/^\d+$/.test(lines[0].trim())) {
+      sequenceNumber = parseInt(lines[0], 10);
+      timeLineIndex = 1;
+    }
+
+    if (timeLineIndex >= lines.length) continue;
+
+    // Match both SRT format (comma) and VTT format (dot) timestamps
+    const timeMatch = lines[timeLineIndex].match(
+      /(\d{2}:\d{2}:\d{2}[,.]\d{3})\s*-->\s*(\d{2}:\d{2}:\d{2}[,.]\d{3})/
     );
     if (!timeMatch) continue;
 
-    const text = lines.slice(2).join('\n');
+    // Normalize to SRT format (use commas)
+    const startTime = timeMatch[1].replace('.', ',');
+    const endTime = timeMatch[2].replace('.', ',');
+    const text = lines.slice(timeLineIndex + 1).join('\n');
 
     entries.push({
       id: crypto.randomUUID(),
       sequenceNumber,
-      startTime: timeMatch[1],
-      endTime: timeMatch[2],
+      startTime,
+      endTime,
       text,
     });
   }

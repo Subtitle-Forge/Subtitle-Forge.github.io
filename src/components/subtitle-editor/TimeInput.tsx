@@ -12,7 +12,7 @@ interface TimeInputProps {
 
 export default function TimeInput({ value, onChange, label, className }: TimeInputProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let v = e.target.value;
+    const v = e.target.value;
     // Allow typing, auto-format on blur
     onChange(v);
   };

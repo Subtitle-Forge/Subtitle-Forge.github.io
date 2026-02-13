@@ -26,6 +26,7 @@ export default function CreatePage() {
   const [maxCharsPerLine, setMaxCharsPerLine] = useState(50);
   const [defaultDuration, setDefaultDuration] = useState(3);
   const [copied, setCopied] = useState(false);
+  const [saved, setSaved] = useState(false);
   const [exportFormat, setExportFormat] = useState<ExportFormat>('srt');
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [previewText, setPreviewText] = useState('');
@@ -157,7 +158,8 @@ export default function CreatePage() {
     const handler = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 's') {
         e.preventDefault();
-        // auto-saved, show notification
+        setSaved(true);
+        setTimeout(() => setSaved(false), 2000);
       }
       if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
         e.preventDefault();
@@ -180,6 +182,13 @@ export default function CreatePage() {
       </div>
 
       <div className="space-y-6">
+        {/* Save notification */}
+        {saved && (
+          <div className="fixed top-20 right-4 z-50 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-lg">
+            ✓ Saved to browser storage
+          </div>
+        )}
+
         {/* Template Selector */}
         <TemplateSelector
           selectedTemplate={selectedTemplate}

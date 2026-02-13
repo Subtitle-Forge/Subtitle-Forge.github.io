@@ -102,9 +102,9 @@ function srtTimeToASS(srtTime: string): string {
   const parts = srtTime.split(':');
   const hours = parseInt(parts[0], 10);
   const minutes = parts[1];
-  const secMs = parts[2].replace(',', '.');
-  const sec = secMs.substring(0, secMs.length - 1); // trim last digit of ms
-  return `${hours}:${minutes}:${sec}`;
+  const [sec, ms] = parts[2].split(',');
+  const centiseconds = ms.substring(0, 2);
+  return `${hours}:${minutes}:${sec}.${centiseconds}`;
 }
 
 /**

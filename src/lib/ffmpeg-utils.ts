@@ -42,9 +42,21 @@ export async function burnSubtitles(
   const {
     fontSize = 24,
     fontFamily = 'Arial',
-    fontColor = '&H00FFFFFF',
-    backgroundColor = '&HA0000000',
+    fontColor = '#ffffff',
+    backgroundColor = '#000000',
   } = options;
+
+  // Convert hex color (#RRGGBB) to ASS color format (&H00BBGGRR)
+  const toASSColor = (hex: string, alpha = '00') => {
+    const c = hex.replace('#', '');
+    const r = c.substring(0, 2);
+    const g = c.substring(2, 4);
+    const b = c.substring(4, 6);
+    return `&H${alpha}${b}${g}${r}`.toUpperCase();
+  };
+
+  const assFontColor = toASSColor(fontColor);
+  const assBackColor = toASSColor(backgroundColor, 'A0');
 
   await ffmpeg.writeFile('input.mp4', await fetchFile(videoFile));
   await ffmpeg.writeFile('subtitles.srt', srtContent);
@@ -53,7 +65,7 @@ export async function burnSubtitles(
     '-i',
     'input.mp4',
     '-vf',
-    `subtitles=subtitles.srt:force_style='FontSize=${fontSize},FontName=${fontFamily},PrimaryColour=${fontColor},BackColour=${backgroundColor},BorderStyle=4'`,
+    `subtitles=subtitles.srt:force_style='FontSize=${fontSize},FontName=${fontFamily},PrimaryColour=${assFontColor},BackColour=${assBackColor},BorderStyle=4'`,
     '-c:a',
     'copy',
     'output.mp4',
